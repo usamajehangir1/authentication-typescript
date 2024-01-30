@@ -112,7 +112,7 @@ const ProductPage: React.FC = () => {
                   </Typography>
                   <Typography variant="h6">
                     {product.price
-                      ? `$${product.price.toFixed(2)}`
+                      ? `Starting from $${product.price.toFixed(2)}`
                       : "Price not available"}
                   </Typography>
                 </CardContent>

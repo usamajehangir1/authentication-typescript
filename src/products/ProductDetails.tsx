@@ -12,15 +12,13 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import PaymentForm from "../payment/PaymentForm";
 import { useNavigate } from "react-router-dom";
-
 import Marquee from "react-fast-marquee";
-import ImagesList from "../homepage/components/ImageList";
 
 interface Product {
   name: string;
   description?: string;
   images?: string[];
-  price?: number;
+  prices?: { id: string; price: number; nickname: string }[];
 }
 
 const stripePromise = loadStripe(
@@ -47,7 +45,6 @@ const ProductDetails: React.FC = () => {
           }
         );
         const productData = await productResponse.json();
-        setProduct(productData);
 
         const priceResponse = await fetch(
           `https://api.stripe.com/v1/prices?product=${productId}`,
@@ -59,11 +56,17 @@ const ProductDetails: React.FC = () => {
           }
         );
         const priceData = await priceResponse.json();
-        const price = priceData.data[0].unit_amount;
-        setProduct((prevProduct) => ({
-          ...prevProduct,
-          price: price / 100,
+
+        const prices = priceData.data.map((price: any) => ({
+          id: price.id,
+          price: price.unit_amount / 100,
+          nickname: price.nickname,
         }));
+
+        setProduct({
+          ...productData,
+          prices: prices,
+        });
       } catch (error) {
         console.error("Error fetching product details:", error.message);
       }
@@ -91,7 +94,7 @@ const ProductDetails: React.FC = () => {
     return <Typography variant="h5">Loading...</Typography>;
   }
 
-  const { name, description, images, price } = product;
+  const { name, description, images, prices } = product;
 
   return (
     <Container maxWidth="xl">
@@ -112,11 +115,12 @@ const ProductDetails: React.FC = () => {
           <Typography variant="body2" color="text.secondary">
             {description || "No description available"}
           </Typography>
-          <Typography variant="h6">
-            {price !== undefined
-              ? `$${price.toFixed(2)}`
-              : "Price not available"}
-          </Typography>
+          {prices &&
+            prices.map((price) => (
+              <Typography key={price.id} variant="h6">
+                {`${price.nickname}: $${price.price.toFixed(2)}`}
+              </Typography>
+            ))}
           {!isLoggedIn && (
             <Button onClick={handleSignIn} variant="contained">
               Sign In to Start Free Trial
