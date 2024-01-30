@@ -15,7 +15,7 @@ const Footer: React.FC = () => {
   const navigate = useNavigate();
 
   const handleContactUs = () => {
-    navigate("/contactus/ContactUs");
+    navigate("/ContactUs");
   };
 
   return (

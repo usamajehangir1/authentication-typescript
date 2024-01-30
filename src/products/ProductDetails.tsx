@@ -1,5 +1,4 @@
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   Typography,
@@ -9,6 +8,10 @@ import {
   Button,
   Container,
 } from "@mui/material";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import PaymentForm from "../payment/PaymentForm";
+import { useNavigate } from "react-router-dom";
 
 interface Product {
   name: string;
@@ -17,33 +20,68 @@ interface Product {
   price?: number;
 }
 
+const stripePromise = loadStripe(
+  "pk_test_51ObKHJKtMZDHrwRuZeUnnHEPk2YVOiULNUya2iRp7flNyeboDcxojifgs4XeYQSitB7HQYYlY9BVjkhAJEpSJm8K00IVqLlNSe"
+);
+
 const ProductDetails: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
   const [product, setProduct] = useState<Product | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [showPaymentForm, setShowPaymentForm] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProductDetails = async () => {
       try {
-        const response = await fetch(
+        const productResponse = await fetch(
           `https://api.stripe.com/v1/products/${productId}`,
           {
             headers: {
-              Authorization: `Bearer sk_test_51ObKHJKtMZDHrwRuYGMuTA9PtN9HHUe6S49TtO0bJSNVfjcOLGIq9f3ksl59qM2VPX6RXopTDSpJl46bWhjj1uIb00G67Csk2B`,
+              Authorization:
+                "Bearer sk_test_51ObKHJKtMZDHrwRuYGMuTA9PtN9HHUe6S49TtO0bJSNVfjcOLGIq9f3ksl59qM2VPX6RXopTDSpJl46bWhjj1uIb00G67Csk2B",
             },
           }
         );
-        const data = await response.json();
-        setProduct(data);
+        const productData = await productResponse.json();
+        setProduct(productData);
+
+        const priceResponse = await fetch(
+          `https://api.stripe.com/v1/prices?product=${productId}`,
+          {
+            headers: {
+              Authorization:
+                "Bearer sk_test_51ObKHJKtMZDHrwRuYGMuTA9PtN9HHUe6S49TtO0bJSNVfjcOLGIq9f3ksl59qM2VPX6RXopTDSpJl46bWhjj1uIb00G67Csk2B",
+            },
+          }
+        );
+        const priceData = await priceResponse.json();
+        const price = priceData.data[0].unit_amount;
+        setProduct((prevProduct) => ({
+          ...prevProduct,
+          price: price / 100,
+        }));
       } catch (error) {
         console.error("Error fetching product details:", error.message);
       }
     };
 
     fetchProductDetails();
+
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
   }, [productId]);
 
-  const handleAddToCart = () => {
-    // Add your logic here for adding the product to the cart
+  const handleStartTrial = () => {
+    setShowPaymentForm(true);
+  };
+
+  const handleSignIn = () => {
+    navigate("/login");
   };
 
   if (!product) {
@@ -53,7 +91,7 @@ const ProductDetails: React.FC = () => {
   const { name, description, images, price } = product;
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="xl">
       <Typography variant="h3" align="center" gutterBottom>
         {name}
       </Typography>
@@ -72,13 +110,31 @@ const ProductDetails: React.FC = () => {
             {description || "No description available"}
           </Typography>
           <Typography variant="h6">
-            ${price?.toFixed(2) || "Price not available"} per Hour
+            {price !== undefined
+              ? `$${price.toFixed(2)}`
+              : "Price not available"}
           </Typography>
-          <Button onClick={handleAddToCart} variant="contained" color="primary">
-            Add to Cart
-          </Button>
+          {!isLoggedIn && (
+            <Button onClick={handleSignIn} variant="contained">
+              Sign In to Start Free Trial
+            </Button>
+          )}
+          {isLoggedIn && !showPaymentForm && (
+            <Button
+              onClick={handleStartTrial}
+              variant="contained"
+              color="primary"
+            >
+              Start your free Trial
+            </Button>
+          )}
         </CardContent>
       </Card>
+      {showPaymentForm && (
+        <Elements stripe={stripePromise}>
+          <PaymentForm />
+        </Elements>
+      )}
     </Container>
   );
 };

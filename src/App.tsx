@@ -1,5 +1,6 @@
 import "./App.css";
 import React from "react";
+import { useState } from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Login from "./user authentication/Login";
 import Register from "./user authentication/Register";
@@ -12,11 +13,14 @@ import ProductDetails from "./products/ProductDetails";
 import AboutUsPage from "./aboutus/AboutUs";
 import ContactUsForm from "./contactus/ContactUs";
 import SignupForm from "./user authentication/SignUp";
+import ResponsiveAppBar from "./homepage/components/Header";
+import Footer from "./homepage/components/Footer";
 
 const App: React.FC = () => {
   return (
     <>
       <BrowserRouter>
+        <ResponsiveAppBar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
@@ -32,6 +36,7 @@ const App: React.FC = () => {
           />
           <Route path="/reset-password" element={<ForgotPassword />} />
         </Routes>
+        <Footer />
       </BrowserRouter>
     </>
   );

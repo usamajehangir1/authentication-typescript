@@ -33,10 +33,11 @@ function ResponsiveAppBar() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    setToken(localStorage.getItem("token"));
     if (token) {
       setIsLoggedIn(true);
     }
-  }, [token]);
+  });
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);

@@ -14,7 +14,7 @@ const ContactUsForm: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="xl">
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6} sx={{ height: "100%" }}>
           <img

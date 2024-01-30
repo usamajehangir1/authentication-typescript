@@ -96,6 +96,7 @@ const ForgotPassword = () => {
           }}
         >
           <Grid container>
+            {" "}
             <Grid item xs={12} sm={12} lg={6}>
               <Container>
                 <Box height={-10} />
@@ -144,7 +145,9 @@ const ForgotPassword = () => {
                         left: "30%",
                       }}
                     >
-                      <Avatar sx={{ ml: "85px", mb: "4px", bgcolor: "#ffffff" }}>
+                      <Avatar
+                        sx={{ ml: "85px", mb: "4px", bgcolor: "#ffffff" }}
+                      >
                         <LockOutlinedIcon />
                       </Avatar>
                       <Typography component="h1" variant="h4">

@@ -8,7 +8,7 @@ import { FaLaptopCode, FaMobileAlt, FaVideo, FaSearch } from "react-icons/fa";
 
 const AboutUsPage: React.FC = () => {
   return (
-    <Container maxWidth="lg" sx={{ marginTop: 4 }}>
+    <Container maxWidth="xl" sx={{ marginTop: 4 }}>
       <Typography variant="h3" gutterBottom align="center">
         About Us
       </Typography>

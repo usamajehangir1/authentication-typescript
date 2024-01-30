@@ -1,22 +1,21 @@
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
+  Button,
   Card,
   CardContent,
   CardMedia,
-  Typography,
-  Grid,
   Container,
-  Button,
+  Grid,
+  Typography,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
 
 interface Product {
   id: string;
   name: string;
   description: string;
   images: string[];
-  // Add other properties as needed
+  price: number | null;
 }
 
 const ProductPage: React.FC = () => {
@@ -38,8 +37,32 @@ const ProductPage: React.FC = () => {
           }
         );
 
-        const data = await response.json();
-        setProducts(data.data);
+        const productsData = await response.json();
+
+        // Fetch product prices
+        const productsWithPrices = await Promise.all(
+          productsData.data.map(async (product: any) => {
+            const priceResponse = await fetch(
+              `https://api.stripe.com/v1/prices?product=${product.id}`,
+              {
+                headers: {
+                  Authorization: `Bearer sk_test_51ObKHJKtMZDHrwRuYGMuTA9PtN9HHUe6S49TtO0bJSNVfjcOLGIq9f3ksl59qM2VPX6RXopTDSpJl46bWhjj1uIb00G67Csk2B`,
+                },
+              }
+            );
+            const priceData = await priceResponse.json();
+            const price = priceData.data[0]?.unit_amount / 100; // Convert to dollars
+            return {
+              id: product.id,
+              name: product.name,
+              description: product.description,
+              images: product.images,
+              price: price || null,
+            };
+          })
+        );
+
+        setProducts(productsWithPrices);
       } catch (error) {
         console.error("Error fetching products:", error.message);
       }
@@ -68,7 +91,7 @@ const ProductPage: React.FC = () => {
       <Typography variant="h4" gutterBottom>
         Available Services are Below!
       </Typography>
-      <Grid container spacing={10}>
+      <Grid container spacing={3}>
         {products.map((product: Product) => (
           <Grid item xs={12} sm={6} md={4} key={product.id}>
             <Link
@@ -88,7 +111,9 @@ const ProductPage: React.FC = () => {
                     {product.description}
                   </Typography>
                   <Typography variant="h6">
-                    {/* Add the price or any other details here */}
+                    {product.price
+                      ? `$${product.price.toFixed(2)}`
+                      : "Price not available"}
                   </Typography>
                 </CardContent>
                 <CardContent>
