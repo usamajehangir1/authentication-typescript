@@ -13,6 +13,9 @@ import { Elements } from "@stripe/react-stripe-js";
 import PaymentForm from "../payment/PaymentForm";
 import { useNavigate } from "react-router-dom";
 
+import Marquee from "react-fast-marquee";
+import ImagesList from "../homepage/components/ImageList";
+
 interface Product {
   name: string;
   description?: string;
@@ -93,7 +96,7 @@ const ProductDetails: React.FC = () => {
   return (
     <Container maxWidth="xl">
       <Typography variant="h3" align="center" gutterBottom>
-        {name}
+        <Marquee>{name}</Marquee>
       </Typography>
       <Card sx={{ maxWidth: 400, margin: "auto" }}>
         <CardMedia
