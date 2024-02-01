@@ -46,7 +46,7 @@ const SubscriptionForm = () => {
     const fetchPaymentMethod = async () => {
       try {
         const response = await fetch(
-          "https://api.stripe.com/v1/payment_methods/",
+          "https://api.stripe.com/v1/payment_methods/card_1OeuQsKtMZDHrwRu8TGOVoHe",
           {
             method: "GET",
             headers: {
@@ -88,7 +88,7 @@ const SubscriptionForm = () => {
         <CardContent>
           {customerDetails && (
             <Typography variant="body1" gutterBottom>
-              You are {customerDetails.email} user.
+              You are {customerDetails.email}.
             </Typography>
           )}
           {paymentMethod &&

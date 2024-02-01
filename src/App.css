@@ -36,3 +36,26 @@
     transform: rotate(360deg);
   }
 }
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #333; /* Adjust background color as needed */
+  color: white; /* Adjust text color as needed */
+  padding: 10px 20px; /* Adjust padding as needed */
+  z-index: 1000; /* Ensure the header stays above other elements */
+}
+
+/* Ensure the footer stays at the bottom of the page */
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #333; /* Adjust background color as needed */
+  color: white; /* Adjust text color as needed */
+  padding: 10px 20px; /* Adjust padding as needed */
+  z-index: 1000; /* Ensure the footer stays above other elements */
+}

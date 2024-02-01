@@ -163,7 +163,7 @@ const ProductDetails: React.FC = () => {
                       variant="contained"
                       color="primary"
                     >
-                      Start your free Trial
+                      Subscribe
                     </Button>
                   )}
                 </CardContent>
@@ -189,7 +189,7 @@ const ProductDetails: React.FC = () => {
           }}
         >
           <Typography variant="h6" component="h2" gutterBottom>
-            Proceed to Checkout for {selectedPrice?.nickname} Package for {name}
+            Checkout for {selectedPrice?.nickname} Package for {name}
             .
           </Typography>
           <Typography>
