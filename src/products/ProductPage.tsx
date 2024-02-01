@@ -110,21 +110,13 @@ const ProductPage: React.FC = () => {
                   <Typography variant="body2" color="textSecondary">
                     {product.description}
                   </Typography>
-                  <Typography variant="h6">
+                  <Typography variant="h5">
                     {product.price
                       ? `Starting from $${product.price.toFixed(2)}`
                       : "Price not available"}
                   </Typography>
                 </CardContent>
-                <CardContent>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleBuyNow}
-                  >
-                    Subscribe
-                  </Button>
-                </CardContent>
+                <CardContent></CardContent>
               </Card>
             </Link>
           </Grid>

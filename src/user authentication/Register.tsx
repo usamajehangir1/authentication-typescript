@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
@@ -13,6 +13,8 @@ import { Alert } from "@mui/material";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { v4 as uuidv4 } from "uuid";
+import { Registerapi } from "./services/Registerapi";
+import { useQuery } from "react-query";
 
 const schema = yup.object({
   username: yup.string().min(3).max(10).required(),
@@ -36,6 +38,25 @@ const Register: React.FC = () => {
   const vertical = "top";
   const horizontal = "right";
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [clicked, setClicked] = useState(false);
+  const { data, error, refetch, isLoading } = useQuery(
+    ["register", email],
+    () => Registerapi({ email, password }),
+    { enabled: clicked }
+  );
+
+  useEffect(() => {
+    if (clicked && !error && !isLoading) {
+      setOpen(true);
+      setClicked(false);
+      console.log(clicked);
+      setTimeout(() => navigate("/login"), 2000);
+    } else if (error) {
+      setClicked(false);
+    }
+  }, [clicked, error]);
 
   const {
     register,
@@ -49,39 +70,10 @@ const Register: React.FC = () => {
     setOpen(false);
   };
 
-  const onSubmit: SubmitHandler<FormData> = async (data) => {
-    try {
-      const url = "https://jwt-bearer-auth1.p.rapidapi.com/register";
-      const options = {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          "Content-Type": "application/json",
-          "X-RapidAPI-Key":
-            "bd61944afdmsh6605bfe1720e716p1bed45jsn5bdf57fe32dc",
-          "X-RapidAPI-Host": "jwt-bearer-auth1.p.rapidapi.com",
-        },
-        body: JSON.stringify({
-          email: data.email,
-          password: data.password,
-          role: uuidv4(),
-        }),
-      };
-
-      const response = await fetch(url, options);
-      const result = await response.json();
-
-      if (response.ok) {
-        setOpen(true); // Display success message
-        console.error("Registration Successful", result);
-      } else {
-        console.error("Registration failed:", result.error);
-        // Display error message or handle accordingly
-      }
-    } catch (error) {
-      console.error("Error during registration:", error);
-      // Display error message or handle accordingly
-    }
+  const OnSubmit: SubmitHandler<FormData> = (items) => {
+    setEmail(items.email);
+    setPassword(items.password);
+    setClicked(true);
   };
 
   function TransitionLeft(props: any) {
@@ -105,7 +97,7 @@ const Register: React.FC = () => {
         style={{
           backgroundSize: "cover",
           height: "100vh",
-          color: "#fffffff", // Set text color to black
+          color: "#fffffff",
         }}
       >
         <Box
@@ -131,12 +123,11 @@ const Register: React.FC = () => {
             >
               <Typography component="h1" variant="h4" color="black">
                 {" "}
-                {/* Set text color to black */}
                 Create Account
               </Typography>
             </Box>
             <Box sx={{ mt: 2 }} />
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(OnSubmit)}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <TextField
@@ -147,7 +138,7 @@ const Register: React.FC = () => {
                     name="username"
                     error={!!errors.username}
                     helperText={errors.username?.message}
-                    InputProps={{ style: { color: "black" } }} // Set field text color to black
+                    InputProps={{ style: { color: "black" } }}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -159,7 +150,7 @@ const Register: React.FC = () => {
                     name="email"
                     error={!!errors.email}
                     helperText={errors.email?.message}
-                    InputProps={{ style: { color: "black" } }} // Set field text color to black
+                    InputProps={{ style: { color: "black" } }}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -172,7 +163,7 @@ const Register: React.FC = () => {
                     type="password"
                     error={!!errors.password}
                     helperText={errors.password?.message}
-                    InputProps={{ style: { color: "black" } }} // Set field text color to black
+                    InputProps={{ style: { color: "black" } }}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -185,7 +176,7 @@ const Register: React.FC = () => {
                     type="password"
                     error={!!errors.confirmpassword}
                     helperText={errors.confirmpassword?.message}
-                    InputProps={{ style: { color: "black" } }} // Set field text color to black
+                    InputProps={{ style: { color: "black" } }}
                   />
                 </Grid>
               </Grid>
@@ -208,7 +199,7 @@ const Register: React.FC = () => {
               <Typography
                 variant="body1"
                 component="span"
-                style={{ marginTop: "10px", color: "black" }} // Set text color to black
+                style={{ marginTop: "10px", color: "black" }}
               >
                 Already have an Account?{" "}
                 <span
