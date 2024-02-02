@@ -9,7 +9,7 @@ import { FaLaptopCode, FaMobileAlt, FaVideo, FaSearch } from "react-icons/fa";
 const AboutUsPage: React.FC = () => {
   return (
     <Container maxWidth="xl" sx={{ marginTop: 4 }}>
-      <Typography variant="h3" gutterBottom align="center">
+      <Typography variant="h1" gutterBottom align="center">
         About Us
       </Typography>
       <Grid container spacing={3}>
@@ -106,6 +106,9 @@ const AboutUsPage: React.FC = () => {
           </Card>
         </Grid>
       </Grid>
+      <Typography variant="h2" gutterBottom align="center">
+        Don't Forget to Check out our Page for Updates!
+      </Typography>
     </Container>
   );
 };

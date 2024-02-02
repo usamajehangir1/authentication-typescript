@@ -170,6 +170,30 @@ function ResponsiveAppBar() {
                     </MenuItem>
                   ))}
             </Menu>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorElNav}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
+            >
+              {pages.map((page) => (
+                <MenuItem
+                  key={page}
+                  onClick={() => {
+                    handleCloseNavMenu();
+                    if (page === "Home") {
+                      navigate("/");
+                    } else if (page === "About") {
+                      navigate("/AboutUs");
+                    } else if (page === "Contact Us") {
+                      navigate("/ContactUs");
+                    }
+                  }}
+                >
+                  <Typography textAlign="center">{page}</Typography>
+                </MenuItem>
+              ))}
+            </Menu>
           </Box>
         </Toolbar>
       </Container>

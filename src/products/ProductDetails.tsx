@@ -189,8 +189,7 @@ const ProductDetails: React.FC = () => {
           }}
         >
           <Typography variant="h6" component="h2" gutterBottom>
-            Checkout for {selectedPrice?.nickname} Package for {name}
-            .
+            Checkout for {selectedPrice?.nickname} Package for {name}.
           </Typography>
           <Typography>
             Your total Checkout Amount is ${selectedPrice?.price}
@@ -200,7 +199,7 @@ const ProductDetails: React.FC = () => {
             variant="contained"
             color="primary"
           >
-            Start Free Trial
+            Subscribe
           </Button>
         </Box>
       </Modal>

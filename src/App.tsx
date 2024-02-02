@@ -15,6 +15,7 @@ import ResponsiveAppBar from "./homepage/components/Header";
 import Footer from "./homepage/components/Footer";
 import { QueryClient, QueryClientProvider } from "react-query";
 import SubscriptionPage from "./subsciption/SubsciptionPage";
+import { Toaster } from "react-hot-toast";
 
 const App: React.FC = () => {
   const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
+        <Toaster position="top-right" />
         <ResponsiveAppBar />
         <Routes>
           <Route path="/" element={<Home />} />

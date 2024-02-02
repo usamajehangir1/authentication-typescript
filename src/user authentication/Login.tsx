@@ -4,7 +4,6 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
-import Snackbar from "@mui/material/Snackbar";
 import Slide from "@mui/material/Slide";
 import { useForm } from "react-hook-form";
 import TextField from "@mui/material/TextField";
@@ -17,9 +16,11 @@ import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Stack from "@mui/material/Stack";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
-import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import bgimg from "../images/backimg.jpg";
+import toast from "react-hot-toast";
+// import { ToastContainer, toast } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
 
 const Alert = (props: AlertProps) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -66,6 +67,8 @@ const Login: React.FC = () => {
       }),
     };
 
+    // toast.error("Login failed. Please try again.");
+
     try {
       const response = await fetch(url, options);
       const result = await response.text();
@@ -74,10 +77,13 @@ const Login: React.FC = () => {
       localStorage.setItem("token", token);
       if (token) {
         setOpen(true);
+        // toast.success("You have successfully logged in!");
+        toast.success("Logged in successfully!");
         navigate("/");
       }
     } catch (error) {
       console.error(error);
+      toast.error("Login failed. Please try again.");
     }
   };
 
@@ -97,17 +103,6 @@ const Login: React.FC = () => {
 
   return (
     <>
-      <Snackbar
-        open={open}
-        autoHideDuration={3000}
-        onClose={handleClose}
-        TransitionComponent={TransitionLeft}
-        anchorOrigin={{ vertical, horizontal }}
-      >
-        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
-          You have successfully logged in!
-        </Alert>
-      </Snackbar>
       <div
         style={{
           backgroundImage: `url(${bgimg})`,

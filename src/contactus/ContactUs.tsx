@@ -6,6 +6,8 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import contactImage from "../images/contactimage.png";
+import PhoneIcon from "@mui/icons-material/Phone";
+import EmailIcon from "@mui/icons-material/Email";
 
 const ContactUsForm: React.FC = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -16,18 +18,23 @@ const ContactUsForm: React.FC = () => {
   return (
     <Container maxWidth="xl">
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={6} sx={{ height: "100%" }}>
-          <img
-            src={contactImage}
-            alt="Contact"
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
-          />
+        <Grid
+          item
+          xs={12}
+          sm={6}
+          sx={{ height: "100%" }}
+          container
+          justifyContent="center"
+          alignItems="center"
+        >
+          <PhoneIcon sx={{ fontSize: 100, color: "primary" }} />
+          <EmailIcon sx={{ fontSize: 100, color: "primary" }} />
         </Grid>
         <Grid item xs={12} sm={6}>
           <Typography variant="h1" gutterBottom>
             Contact Us
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: -3 }}>
             <TextField
               fullWidth
               margin="normal"
