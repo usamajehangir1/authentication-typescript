@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Elements } from "@stripe/react-stripe-js";
+import {
+  Elements,
+  useStripe,
+  useElements,
+  CardElement,
+} from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import {
   Typography,
   Container,
@@ -9,6 +13,8 @@ import {
   CardContent,
   Button,
 } from "@mui/material";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const stripePromise = loadStripe(
   "pk_test_51ObKHJKtMZDHrwRuZeUnnHEPk2YVOiULNUya2iRp7flNyeboDcxojifgs4XeYQSitB7HQYYlY9BVjkhAJEpSJm8K00IVqLlNSe"
@@ -76,6 +82,49 @@ const SubscriptionForm = () => {
     setIsLoading(true);
     setErrorMessage(null);
 
+    try {
+      const { error, paymentMethod } = await stripe.createPaymentMethod({
+        type: "card",
+        card: elements.getElement(CardElement),
+      });
+
+      if (error) {
+        setErrorMessage(error.message);
+        setIsLoading(false);
+        return;
+      }
+
+      const params = new URLSearchParams();
+      params.append("customer", "cus_PRhyD5g5m8dzFU");
+      params.append("items[0][price]", "price_1OeFeXKtMZDHrwRu4DnKmE5n");
+      params.append("payment_behavior", "default_incomplete");
+
+      const subscriptionResponse = await fetch(
+        "https://api.stripe.com/v1/subscriptions",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization:
+              "Bearer sk_test_51ObKHJKtMZDHrwRuYGMuTA9PtN9HHUe6S49TtO0bJSNVfjcOLGIq9f3ksl59qM2VPX6RXopTDSpJl46bWhjj1uIb00G67Csk2B",
+          },
+          body: params.toString(),
+        }
+      );
+
+      const subscriptionData = await subscriptionResponse.json();
+
+      if (subscriptionData.error) {
+        setErrorMessage(subscriptionData.error.message);
+      } else {
+        console.log("Subscription successful:", subscriptionData);
+        toast.success("Successfully Subscribed!");
+      }
+    } catch (error) {
+      console.error("Error creating subscription:", error.message);
+      setErrorMessage("Error creating subscription. Please try again.");
+    }
+
     setIsLoading(false);
   };
 
@@ -133,6 +182,7 @@ const SubscriptionForm = () => {
           </form>
         </CardContent>
       </Card>
+      <ToastContainer />
     </Container>
   );
 };

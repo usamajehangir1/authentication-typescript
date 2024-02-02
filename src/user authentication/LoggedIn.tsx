@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
-import PaymentForm from "../payment/PaymentForm";
+// import PaymentForm from "../payment/PaymentForm";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe, StripeError } from "@stripe/stripe-js";
 
@@ -39,9 +39,9 @@ const LoggedIn: React.FC = () => {
             Enter your card details for buying the car!
           </Typography>
 
-          <Elements stripe={stripePromise}>
+          {/* <Elements stripe={stripePromise}>
             <PaymentForm />
-          </Elements>
+          </Elements> */}
 
           <Button variant="contained" color="primary" onClick={handleLogout}>
             Logout
