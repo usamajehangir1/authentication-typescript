@@ -97,7 +97,7 @@ const SubscriptionForm = () => {
       const params = new URLSearchParams();
       params.append("customer", "cus_PRhyD5g5m8dzFU");
       params.append("items[0][price]", "price_1OeFeXKtMZDHrwRu4DnKmE5n");
-      params.append("payment_behavior", "default_incomplete");
+      params.append("payment_behavior", "allow_incomplete");
 
       const subscriptionResponse = await fetch(
         "https://api.stripe.com/v1/subscriptions",

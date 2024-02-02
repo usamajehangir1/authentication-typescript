@@ -15,9 +15,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import { useNavigate } from "react-router-dom";
-import Cart from "./Cart";
 
 const pages = ["Home", "About", "Contact Us"];
 const settingsLogin = ["Sign In", "Sign Up", "Forgot Password"];
@@ -173,7 +171,6 @@ function ResponsiveAppBar() {
                   ))}
             </Menu>
           </Box>
-          <ShoppingCartOutlinedIcon color="primary" onClick={() => <Cart />} />
         </Toolbar>
       </Container>
     </AppBar>
