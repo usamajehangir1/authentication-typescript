@@ -1,52 +1,57 @@
-import React from "react";
-import Container from "@mui/material/Container";
+import React, { useRef } from "react";
+import emailjs from "@emailjs/browser";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-import contactImage from "../images/contactimage.png";
 import PhoneIcon from "@mui/icons-material/Phone";
 import EmailIcon from "@mui/icons-material/Email";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const ContactUsForm: React.FC = () => {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    // Add your form submission logic here
+const ContactUsForm = () => {
+  const form = useRef();
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+
+    emailjs
+      .sendForm("service_7dzlimw", "template_5cd4t0e", form.current, {
+        publicKey: "K_AIf7LQwwB884xPH",
+      })
+      .then(
+        () => {
+          toast.success("Email sent successfully!");
+        },
+        (error) => {
+          toast.error("Failed to send email.");
+          console.error("FAILED...", error.text);
+        }
+      );
   };
 
   return (
-    <Container maxWidth="xl">
-      <Grid container spacing={3}>
-        <Grid
-          item
-          xs={12}
-          sm={6}
-          sx={{ height: "100%" }}
-          container
-          justifyContent="center"
-          alignItems="center"
-        >
-          <PhoneIcon sx={{ fontSize: 100, color: "primary" }} />
-          <EmailIcon sx={{ fontSize: 100, color: "primary" }} />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Typography variant="h1" gutterBottom>
+    <Box maxWidth="sm" mx="auto" my={8}>
+      <ToastContainer />
+      <Grid container spacing={2} alignItems="center" justifyContent="center">
+        <Grid item xs={12} sx={{ textAlign: "center" }}>
+          <Typography variant="h4" gutterBottom>
             Contact Us
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: -3 }}>
+        </Grid>
+        <Grid item xs={12} sx={{ textAlign: "center" }}>
+          <PhoneIcon sx={{ fontSize: 60, color: "primary" }} />
+          <EmailIcon sx={{ fontSize: 60, color: "primary" }} />
+        </Grid>
+        <Grid item xs={12}>
+          <form ref={form} onSubmit={sendEmail}>
             <TextField
               fullWidth
               margin="normal"
-              label="First Name"
+              label="Name"
               variant="outlined"
-              required
-            />
-            <TextField
-              fullWidth
-              margin="normal"
-              label="Last Name"
-              variant="outlined"
+              name="user_name"
               required
             />
             <TextField
@@ -55,6 +60,7 @@ const ContactUsForm: React.FC = () => {
               label="Email"
               type="email"
               variant="outlined"
+              name="user_email"
               required
             />
             <TextField
@@ -62,13 +68,7 @@ const ContactUsForm: React.FC = () => {
               margin="normal"
               label="Contact Number"
               variant="outlined"
-              required
-            />
-            <TextField
-              fullWidth
-              margin="normal"
-              label="Company Name"
-              variant="outlined"
+              name="contact_number"
             />
             <TextField
               fullWidth
@@ -77,20 +77,16 @@ const ContactUsForm: React.FC = () => {
               multiline
               rows={4}
               variant="outlined"
+              name="message"
               required
             />
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              sx={{ mt: 2 }}
-            >
+            <Button type="submit" variant="contained" color="primary">
               Submit
             </Button>
-          </Box>
+          </form>
         </Grid>
       </Grid>
-    </Container>
+    </Box>
   );
 };
 

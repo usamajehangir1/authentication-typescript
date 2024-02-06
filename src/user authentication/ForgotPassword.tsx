@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, forwardRef, ChangeEvent, FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import {
   Box,
@@ -10,7 +10,6 @@ import {
   Typography,
   Container,
   Avatar,
-  Checkbox,
   Snackbar,
   Stack,
   Slide,
@@ -20,7 +19,6 @@ import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import bgimg from "../images/backimg.jpg";
 
-// Define custom Alert component
 const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
   ref

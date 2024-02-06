@@ -39,7 +39,6 @@ const ProductPage: React.FC = () => {
 
         const productsData = await response.json();
 
-        // Fetch product prices
         const productsWithPrices = await Promise.all(
           productsData.data.map(async (product: any) => {
             const priceResponse = await fetch(
@@ -51,7 +50,7 @@ const ProductPage: React.FC = () => {
               }
             );
             const priceData = await priceResponse.json();
-            const price = priceData.data[0]?.unit_amount / 100; // Convert to dollars
+            const price = priceData.data[0]?.unit_amount / 100;
             return {
               id: product.id,
               name: product.name,

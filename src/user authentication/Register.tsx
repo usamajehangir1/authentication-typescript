@@ -2,19 +2,16 @@ import React, { useState, useEffect } from "react";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import Snackbar from "@mui/material/Snackbar";
-import Slide from "@mui/material/Slide";
 import { useForm, SubmitHandler } from "react-hook-form";
 import TextField from "@mui/material/TextField";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { useNavigate } from "react-router-dom";
-import { Alert } from "@mui/material";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { v4 as uuidv4 } from "uuid";
 import { Registerapi } from "./services/Registerapi";
 import { useQuery } from "react-query";
+import toast from "react-hot-toast";
 
 const schema = yup.object({
   username: yup.string().min(3).max(10).required(),
@@ -55,6 +52,7 @@ const Register: React.FC = () => {
       setTimeout(() => navigate("/login"), 2000);
     } else if (error) {
       setClicked(false);
+      toast.success("Registered successfully!");
     }
   }, [clicked, error]);
 
@@ -76,23 +74,8 @@ const Register: React.FC = () => {
     setClicked(true);
   };
 
-  function TransitionLeft(props: any) {
-    return <Slide {...props} direction="left" />;
-  }
-
   return (
     <>
-      <Snackbar
-        open={open}
-        autoHideDuration={3000}
-        onClose={handleClose}
-        TransitionComponent={TransitionLeft}
-        anchorOrigin={{ vertical, horizontal }}
-      >
-        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
-          Registration Successful!
-        </Alert>
-      </Snackbar>
       <div
         style={{
           backgroundSize: "cover",
@@ -214,7 +197,7 @@ const Register: React.FC = () => {
               <Typography
                 variant="body1"
                 component="span"
-                style={{ marginTop: "10px", color: "black" }} // Set text color to black
+                style={{ marginTop: "10px", color: "black" }}
               >
                 Go back to Homepage --
                 <span

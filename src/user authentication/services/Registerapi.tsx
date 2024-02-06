@@ -26,7 +26,7 @@ const Registerapi = async ({ email, password }) => {
       throw new Error(result.error || "Registration failed");
     }
 
-    return result; // Return the registration response
+    return result;
   } catch (error) {
     throw new Error("Registration error:" + error.message);
   }

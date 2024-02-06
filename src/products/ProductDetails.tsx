@@ -12,8 +12,6 @@ import {
   Box,
 } from "@mui/material";
 import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
-// import PaymentForm from "../payment/PaymentForm";
 import Marquee from "react-fast-marquee";
 
 interface Product {
@@ -171,11 +169,6 @@ const ProductDetails: React.FC = () => {
             </Grid>
           ))}
       </Grid>
-      {/* {showPaymentForm && (
-        <Elements stripe={stripePromise}>
-          <PaymentForm />
-        </Elements> */}
-      {/* )} */}
       <Modal open={showModal} onClose={handleModalClose}>
         <Box
           sx={{

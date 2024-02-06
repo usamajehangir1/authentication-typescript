@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
@@ -15,26 +14,15 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Stack from "@mui/material/Stack";
-import MuiAlert, { AlertProps } from "@mui/material/Alert";
-import { loadStripe } from "@stripe/stripe-js";
 import bgimg from "../images/backimg.jpg";
 import toast from "react-hot-toast";
-// import { ToastContainer, toast } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
-
-const Alert = (props: AlertProps) => {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-};
+import { Loginapi } from "./services/Loginapi";
 
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
   },
 });
-
-const stripePromise = loadStripe(
-  "pk_test_51ObKHJKtMZDHrwRuZeUnnHEPk2YVOiULNUya2iRp7flNyeboDcxojifgs4XeYQSitB7HQYYlY9BVjkhAJEpSJm8K00IVqLlNSe"
-);
 
 const Login: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -50,41 +38,27 @@ const Login: React.FC = () => {
   } = useForm();
 
   const onSubmit = async (data: any) => {
-    console.log(data);
     const { email, password } = data;
-    const url = "https://jwt-bearer-auth1.p.rapidapi.com/login";
-    const options = {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "Content-Type": "application/json",
-        "X-RapidAPI-Key": "bd61944afdmsh6605bfe1720e716p1bed45jsn5bdf57fe32dc",
-        "X-RapidAPI-Host": "jwt-bearer-auth1.p.rapidapi.com",
-      },
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-    };
-
-    // toast.error("Login failed. Please try again.");
-
     try {
-      const response = await fetch(url, options);
-      const result = await response.text();
-      const data = JSON.parse(result);
-      const token = data.token;
-      localStorage.setItem("token", token);
-      if (token) {
+      const responseData = await Loginapi({ email, password });
+
+      if (responseData && responseData.token) {
+        const token = responseData.token;
+        localStorage.setItem("token", token);
         setOpen(true);
-        // toast.success("You have successfully logged in!");
         toast.success("Logged in successfully!");
         navigate("/");
+      } else {
+        toast.error("Invalid response from server. Please try again.");
       }
     } catch (error) {
       console.error(error);
-      toast.error("Login failed. Please try again.");
+      toast.error("Invalid Credentials. Please Try Again!");
     }
+  };
+
+  const loginUser = async (email: string, password: string) => {
+    return await Loginapi({ email, password });
   };
 
   const handleClose = (
@@ -95,10 +69,6 @@ const Login: React.FC = () => {
       return;
     }
     setOpen(false);
-  };
-
-  const TransitionLeft = (props: any) => {
-    return <Slide {...props} direction="left" />;
   };
 
   return (
