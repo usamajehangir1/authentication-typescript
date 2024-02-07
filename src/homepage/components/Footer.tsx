@@ -30,7 +30,7 @@ const Footer: React.FC = () => {
     >
       <Toolbar>
         <Tooltip title="Mail">
-          <IconButton color="inherit" disabled>
+          <IconButton color="inherit">
             <MailOutlineIcon />
           </IconButton>
         </Tooltip>

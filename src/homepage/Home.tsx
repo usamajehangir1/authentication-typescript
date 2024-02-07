@@ -3,6 +3,7 @@ import Mainpage from "./components/Mainpage";
 import ProductPage from "../products/ProductPage";
 import Marquee from "react-fast-marquee";
 import ImagesList from "./components/ImageList";
+import ProductSearch from "../products/ProductSearch";
 
 const images: string[] = [
   "https://marketplace-mfe-dev.netsolapp.io/616fe9bc42eb781f5389.svg",
@@ -19,8 +20,9 @@ function Home(): JSX.Element {
     <>
       <Mainpage />
       <Marquee>
-        <ImagesList images={images}/>
+        <ImagesList images={images} />
       </Marquee>
+      <ProductSearch />
       <ProductPage />
     </>
   );

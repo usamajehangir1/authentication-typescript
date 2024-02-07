@@ -11,8 +11,8 @@ import {
   Modal,
   Box,
 } from "@mui/material";
-import { loadStripe } from "@stripe/stripe-js";
 import Marquee from "react-fast-marquee";
+import { fetchProductDetails, fetchPrices } from "./services/productdetailsapi";
 
 interface Product {
   name: string;
@@ -21,12 +21,10 @@ interface Product {
   prices?: { id: string; price: number; nickname: string }[];
 }
 
-const stripePromise = loadStripe(
-  "pk_test_51ObKHJKtMZDHrwRuZeUnnHEPk2YVOiULNUya2iRp7flNyeboDcxojifgs4XeYQSitB7HQYYlY9BVjkhAJEpSJm8K00IVqLlNSe"
-);
-
 const ProductDetails: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
+  const navigate = useNavigate();
+
   const [product, setProduct] = useState<Product | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [showPaymentForm, setShowPaymentForm] = useState<boolean>(false);
@@ -36,49 +34,23 @@ const ProductDetails: React.FC = () => {
     nickname: string;
   } | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchProductDetails = async () => {
+    const fetchData = async () => {
       try {
-        const productResponse = await fetch(
-          `https://api.stripe.com/v1/products/${productId}`,
-          {
-            headers: {
-              Authorization:
-                "Bearer sk_test_51ObKHJKtMZDHrwRuYGMuTA9PtN9HHUe6S49TtO0bJSNVfjcOLGIq9f3ksl59qM2VPX6RXopTDSpJl46bWhjj1uIb00G67Csk2B",
-            },
-          }
-        );
-        const productData = await productResponse.json();
-
-        const priceResponse = await fetch(
-          `https://api.stripe.com/v1/prices?product=${productId}`,
-          {
-            headers: {
-              Authorization:
-                "Bearer sk_test_51ObKHJKtMZDHrwRuYGMuTA9PtN9HHUe6S49TtO0bJSNVfjcOLGIq9f3ksl59qM2VPX6RXopTDSpJl46bWhjj1uIb00G67Csk2B",
-            },
-          }
-        );
-        const priceData = await priceResponse.json();
-
-        const prices = priceData.data.map((price: any) => ({
-          id: price.id,
-          price: price.unit_amount / 100,
-          nickname: price.nickname,
-        }));
+        const productData = await fetchProductDetails(productId);
+        const pricesData = await fetchPrices(productId);
 
         setProduct({
           ...productData,
-          prices: prices,
+          prices: pricesData,
         });
       } catch (error) {
-        console.error("Error fetching product details:", error.message);
+        console.error("Error fetching data:", error.message);
       }
     };
 
-    fetchProductDetails();
+    fetchData();
 
     const token = localStorage.getItem("token");
     if (token) {

@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, forwardRef, ChangeEvent, FormEvent } from "react";
+import { useState, forwardRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import {
@@ -34,7 +34,6 @@ const darkTheme = createTheme({
 
 const ForgotPassword = () => {
   const [open, setOpen] = useState(false);
-  const [remember, setRemember] = useState(false);
   const vertical = "top";
   const horizontal = "right";
   const navigate = useNavigate();

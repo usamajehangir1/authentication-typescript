@@ -32,13 +32,11 @@ interface FormData {
 
 const Register: React.FC = () => {
   const [open, setOpen] = useState(false);
-  const vertical = "top";
-  const horizontal = "right";
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [clicked, setClicked] = useState(false);
-  const { data, error, refetch, isLoading } = useQuery(
+  const { error, isLoading } = useQuery(
     ["register", email],
     () => Registerapi({ email, password }),
     { enabled: clicked }
@@ -64,10 +62,6 @@ const Register: React.FC = () => {
     resolver: yupResolver(schema) as any,
   });
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   const OnSubmit: SubmitHandler<FormData> = (items) => {
     setEmail(items.email);
     setPassword(items.password);
@@ -89,7 +83,7 @@ const Register: React.FC = () => {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: "75%",
+            width: "-75%",
             height: "70%",
             bgcolor: "background.paper",
             boxShadow: 24,

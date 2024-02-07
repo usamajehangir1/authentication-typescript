@@ -4,10 +4,6 @@ import Grid from "@mui/material/Grid";
 import Slide from "@mui/material/Slide";
 
 function Mainpage(): JSX.Element {
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-  };
-
   return (
     <Grid
       container

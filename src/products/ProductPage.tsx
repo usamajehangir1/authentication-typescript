@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useQuery } from "react-query";
 import {
   Button,
   Card,
@@ -9,6 +10,7 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
+import { fetchProducts, fetchPrices } from "./services/productpageapi";
 
 interface Product {
   id: string;
@@ -19,38 +21,23 @@ interface Product {
 }
 
 const ProductPage: React.FC = () => {
-  const [products, setProducts] = useState<Product[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const productsPerPage: number = 6;
 
+  const {
+    data: productsData,
+    isLoading,
+    isError,
+  } = useQuery(["products", currentPage], () =>
+    fetchProducts(currentPage, productsPerPage)
+  );
+
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch(
-          `https://api.stripe.com/v1/products?limit=${productsPerPage}&offset=${
-            (currentPage - 1) * productsPerPage
-          }`,
-          {
-            headers: {
-              Authorization: `Bearer sk_test_51ObKHJKtMZDHrwRuYGMuTA9PtN9HHUe6S49TtO0bJSNVfjcOLGIq9f3ksl59qM2VPX6RXopTDSpJl46bWhjj1uIb00G67Csk2B`,
-            },
-          }
-        );
-
-        const productsData = await response.json();
-
-        const productsWithPrices = await Promise.all(
+    if (productsData) {
+      const fetchProductPrices = async () => {
+        const productsWithPrices: Product[] = await Promise.all(
           productsData.data.map(async (product: any) => {
-            const priceResponse = await fetch(
-              `https://api.stripe.com/v1/prices?product=${product.id}`,
-              {
-                headers: {
-                  Authorization: `Bearer sk_test_51ObKHJKtMZDHrwRuYGMuTA9PtN9HHUe6S49TtO0bJSNVfjcOLGIq9f3ksl59qM2VPX6RXopTDSpJl46bWhjj1uIb00G67Csk2B`,
-                },
-              }
-            );
-            const priceData = await priceResponse.json();
-            const price = priceData.data[0]?.unit_amount / 100;
+            const price = await fetchPrices(product.id);
             return {
               id: product.id,
               name: product.name,
@@ -60,16 +47,13 @@ const ProductPage: React.FC = () => {
             };
           })
         );
-
         setProducts(productsWithPrices);
-      } catch (error) {
-        console.error("Error fetching products:", error.message);
-      }
-    };
+      };
+      fetchProductPrices();
+    }
+  }, [productsData]);
 
-    fetchProducts();
-  }, [currentPage]);
-
+  const [products, setProducts] = useState<Product[]>([]);
   const totalProducts: number = 7;
   const totalPages: number = Math.ceil(totalProducts / productsPerPage);
 
@@ -79,11 +63,8 @@ const ProductPage: React.FC = () => {
     }
   };
 
-  const navigate = useNavigate();
-
-  const handleBuyNow = () => {
-    navigate("/Login");
-  };
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error fetching data</div>;
 
   return (
     <Container maxWidth="lg" style={{ marginTop: "70px" }}>
