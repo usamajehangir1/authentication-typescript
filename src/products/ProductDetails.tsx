@@ -13,12 +13,15 @@ import {
 } from "@mui/material";
 import Marquee from "react-fast-marquee";
 import { fetchProductDetails, fetchPrices } from "./services/productdetailsapi";
+import { Stack } from "@mui/material";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 interface Product {
   name: string;
   description?: string;
   images?: string[];
   prices?: { id: string; price: number; nickname: string }[];
+  features?: any;
 }
 
 const ProductDetails: React.FC = () => {
@@ -86,6 +89,7 @@ const ProductDetails: React.FC = () => {
   }
 
   const { name, description, images, prices } = product;
+  console.log("this is my product", product);
 
   return (
     <Container maxWidth="xl">
@@ -127,6 +131,14 @@ const ProductDetails: React.FC = () => {
                       Sign In to Start Free Trial
                     </Button>
                   )}
+                  {product?.features?.map((feature: any, index: any) => (
+                    <Stack direction="row" spacing={1}>
+                      <CheckCircleIcon sx={{ fontSize: 30, color: "green" }} />
+                      <Typography key={index} variant="body1">
+                        {feature.name}
+                      </Typography>
+                    </Stack>
+                  ))}
                   {isLoggedIn && !showPaymentForm && (
                     <Button
                       onClick={() => handleStartTrial(price)}

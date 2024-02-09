@@ -12,7 +12,7 @@ function Mainpage(): JSX.Element {
       alignItems="center"
     >
       <Slide direction="left" in={true} timeout={500}>
-        <Typography variant="h1" gutterBottom>
+        <Typography variant="h2" gutterBottom>
           Welcome to Services Portal
         </Typography>
       </Slide>

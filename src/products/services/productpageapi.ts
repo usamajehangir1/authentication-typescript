@@ -25,5 +25,6 @@ export const fetchPrices = async (productId: string) => {
     }
   );
   const priceData = await priceResponse.json();
+
   return priceData.data[0]?.unit_amount / 100;
 };
