@@ -9,7 +9,7 @@ import Grid from "@mui/material/Grid";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Registerapi } from "./services/Registerapi";
+import { Registerapi, createStripeCustomer } from "./services/Registerapi";
 import { useQuery } from "react-query";
 import toast from "react-hot-toast";
 
@@ -36,23 +36,41 @@ const Register: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [clicked, setClicked] = useState(false);
-  const { error, isLoading } = useQuery(
+  const [username, setUsername] = useState("");
+  const { error: registerError, isLoading: isRegistering } = useQuery(
     ["register", email],
     () => Registerapi({ email, password }),
     { enabled: clicked }
   );
 
+  const {
+    error: stripeError,
+    isLoading: isCreatingCustomer,
+    data: createdCustomerData,
+  } = useQuery(
+    ["createCustomer", email],
+    () => createStripeCustomer(email, username),
+    { enabled: !registerError && clicked }
+  );
+
   useEffect(() => {
-    if (clicked && !error && !isLoading) {
+    if (clicked && !registerError && !isRegistering) {
       setOpen(true);
       setClicked(false);
       console.log(clicked);
       setTimeout(() => navigate("/login"), 2000);
-    } else if (error) {
+    } else if (registerError) {
       setClicked(false);
       toast.success("Registered successfully!");
     }
-  }, [clicked, error]);
+  }, [clicked, registerError]);
+
+  useEffect(() => {
+    if (createdCustomerData) {
+      const createdCustomerEmail = createdCustomerData.email; // Extract the email address from the object
+      localStorage.setItem("customerEmail", createdCustomerEmail); // Store the email address in local storage
+    }
+  }, [createdCustomerData]);
 
   const {
     register,
@@ -64,8 +82,10 @@ const Register: React.FC = () => {
 
   const OnSubmit: SubmitHandler<FormData> = (items) => {
     setEmail(items.email);
+    setUsername(items.username);
     setPassword(items.password);
     setClicked(true);
+    createStripeCustomer(email, "");
   };
 
   return (

@@ -37,8 +37,6 @@ export const fetchPrices = async (productId: string) => {
     }
 
     const priceData = await priceResponse.json();
-    console.log("this is my price data", priceData);
-
     return priceData.data.map((price: any) => ({
       id: price.id,
       price: price.unit_amount / 100,

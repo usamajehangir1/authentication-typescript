@@ -89,7 +89,6 @@ const ProductDetails: React.FC = () => {
   }
 
   const { name, description, images, prices } = product;
-  console.log("this is my product", product);
 
   return (
     <Container maxWidth="xl">
