@@ -54,21 +54,20 @@ const Register: React.FC = () => {
   );
 
   useEffect(() => {
-    if (clicked && !registerError && !isRegistering) {
+    if (clicked && !registerError) {
       setOpen(true);
       setClicked(false);
-      console.log(clicked);
+      toast.success("Registered successfully!");
       setTimeout(() => navigate("/login"), 2000);
     } else if (registerError) {
       setClicked(false);
-      toast.success("Registered successfully!");
     }
   }, [clicked, registerError]);
 
   useEffect(() => {
     if (createdCustomerData) {
-      const createdCustomerEmail = createdCustomerData.email; // Extract the email address from the object
-      localStorage.setItem("customerEmail", createdCustomerEmail); // Store the email address in local storage
+      const createdCustomerEmail = createdCustomerData.email;
+      localStorage.setItem("customerEmail", createdCustomerEmail);
     }
   }, [createdCustomerData]);
 

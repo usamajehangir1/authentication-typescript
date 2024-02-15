@@ -28,8 +28,10 @@ const ProductPage: React.FC = () => {
     data: productsData,
     isLoading,
     isError,
-  } = useQuery(["products", currentPage], () =>
-    fetchProducts(currentPage, productsPerPage)
+  } = useQuery(
+    ["products", currentPage],
+    () => fetchProducts(currentPage, productsPerPage),
+    { staleTime: 300000 }
   );
 
   useEffect(() => {

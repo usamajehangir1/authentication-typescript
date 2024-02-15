@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 
 const createStripeCustomer = async (email, name) => {
-  console.log("========email: ", email, "======name: ", name);
   try {
     const response = await fetch("https://api.stripe.com/v1/customers", {
       method: "POST",
@@ -10,7 +9,7 @@ const createStripeCustomer = async (email, name) => {
           "Bearer sk_test_51ObKHJKtMZDHrwRuYGMuTA9PtN9HHUe6S49TtO0bJSNVfjcOLGIq9f3ksl59qM2VPX6RXopTDSpJl46bWhjj1uIb00G67Csk2B",
         "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: `email=${email}&name=${name}`, // Pass the email and name to create the customer
+      body: `email=${email}&name=${name}`,
     });
 
     const result = await response.json();
@@ -52,9 +51,7 @@ const Registerapi = async ({ email, password }) => {
     }
 
     return result;
-  } catch (error) {
-    throw new Error("Registration error:" + error.message);
-  }
+  } catch (error) {}
 };
 
 export { Registerapi, createStripeCustomer };
